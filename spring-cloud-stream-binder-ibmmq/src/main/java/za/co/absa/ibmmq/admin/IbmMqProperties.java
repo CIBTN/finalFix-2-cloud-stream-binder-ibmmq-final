@@ -5,7 +5,6 @@
 package za.co.absa.ibmmq.admin;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * The basic connectivity and security properties for IBM MQ
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @ConfigurationProperties(prefix = "spring.ibmmq")
 public class IbmMqProperties {
+
     private String host = "127.0.0.1";
     private Integer port = 1414;
     private String qm = "QM1";

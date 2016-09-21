@@ -8,6 +8,9 @@ import java.util.Optional;
 
 import org.springframework.util.Assert;
 
+import com.ibm.mq.MQQueue;
+import com.ibm.mq.MQTopic;
+
 import za.co.absa.ibmmq.IbmMqException;
 import za.co.absa.ibmmq.admin.commands.Command;
 import za.co.absa.ibmmq.admin.commands.CreateQueueCommand;
@@ -16,9 +19,6 @@ import za.co.absa.ibmmq.admin.commands.CreateTopicCommand;
 import za.co.absa.ibmmq.admin.commands.InquireQueueCommand;
 import za.co.absa.ibmmq.admin.commands.InquireTopicCommand;
 
-import com.ibm.mq.MQQueue;
-import com.ibm.mq.MQTopic;
-
 /**
  * A Facade for executing commands against IBM MQ to perform scenarios like get or create queue/topic.
  *
@@ -26,16 +26,12 @@ import com.ibm.mq.MQTopic;
  * @version 1.0
  */
 public class IbmMqAdmin {
+
     private Command<MQQueue, InquireQueueCommand.Params> inquireQueueCommand;
-
     private Command<MQQueue, CreateQueueCommand.Params> createQueueCommand;
-
     private Command<MQTopic, InquireTopicCommand.Params> inquireTopicCommand;
-
     private Command<MQTopic, CreateTopicCommand.Params> createTopicCommand;
-
     private Command<Void, CreateSubscriptionCommand.Params> createSubscriptionCommand;
-
 
     /**
      * Gets the MQQueue instance for the given queue name.
@@ -204,7 +200,7 @@ public class IbmMqAdmin {
      *            the new value.
      */
     public void setCreateSubscriptionCommand(
-        final Command<Void, CreateSubscriptionCommand.Params> createSubscriptionCommand) {
+            final Command<Void, CreateSubscriptionCommand.Params> createSubscriptionCommand) {
         this.createSubscriptionCommand = createSubscriptionCommand;
     }
 
@@ -226,6 +222,4 @@ public class IbmMqAdmin {
     public void setInquireQueueCommand(final Command<MQQueue, InquireQueueCommand.Params> inquireQueueCommand) {
         this.inquireQueueCommand = inquireQueueCommand;
     }
-
-
 }

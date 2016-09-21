@@ -4,18 +4,9 @@
 
 package za.co.absa.cloud.stream.binder.ibmmq;
 
-import java.util.Date;
-
 import org.junit.Test;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.integration.annotation.InboundChannelAdapter;
-import org.springframework.integration.core.MessageSource;
-import org.springframework.messaging.support.GenericMessage;
 
 /**
  * Test the binder with a producer application and with Topic destination.

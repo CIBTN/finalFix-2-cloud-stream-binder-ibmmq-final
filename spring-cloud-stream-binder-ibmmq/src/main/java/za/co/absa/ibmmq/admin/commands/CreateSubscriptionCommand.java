@@ -4,13 +4,12 @@
 
 package za.co.absa.ibmmq.admin.commands;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import za.co.absa.ibmmq.IbmMqException;
 
 import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.pcf.PCFMessage;
+
+import za.co.absa.ibmmq.IbmMqException;
 
 /**
  * a PCF command to create a subscription.

@@ -5,7 +5,8 @@
 package za.co.absa.demo.sender;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -19,11 +20,7 @@ import org.springframework.messaging.support.GenericMessage;
 @EnableBinding(Source.class)
 public class RandomStringGenerator {
 
-    public static void main(final String[] args) {
-        SpringApplication.run(RandomStringGenerator.class, args);
-    }
-
-    private static final Logger log = Logger.getLogger(RandomStringGenerator.class);
+    private static final Logger log = LoggerFactory.getLogger(RandomStringGenerator.class);
 
     private volatile int messageCounter = 0;
 
@@ -35,5 +32,9 @@ public class RandomStringGenerator {
             log.info("Random: " + random);
             return new GenericMessage<>(random);
         };
+    }
+
+    public static void main(final String[] args) {
+        SpringApplication.run(RandomStringGenerator.class, args);
     }
 }

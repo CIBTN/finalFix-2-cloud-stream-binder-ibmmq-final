@@ -11,5 +11,6 @@ package za.co.absa.cloud.stream.binder.ibmmq;
  * @version 1.0
  */
 public enum DestinationType {
+
     TOPIC, QUEUE
 }

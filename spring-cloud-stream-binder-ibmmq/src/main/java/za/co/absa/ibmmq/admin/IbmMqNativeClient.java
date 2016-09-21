@@ -4,14 +4,11 @@
 
 package za.co.absa.ibmmq.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import za.co.absa.ibmmq.IbmMqException;
-
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQQueueManager;
 import com.ibm.mq.pcf.PCFMessageAgent;
+
+import za.co.absa.ibmmq.IbmMqException;
 
 /**
  * A wrapper for MQQueueManager and PCFMessageAgent.
@@ -20,10 +17,10 @@ import com.ibm.mq.pcf.PCFMessageAgent;
  * @version 1.0
  */
 public class IbmMqNativeClient {
+
     private IbmMqConnectionManager ibmMqConnectionManager;
 
     private volatile MQQueueManager queueManager;
-
     private volatile PCFMessageAgent pcfMessageAgent;
 
     public MQQueueManager getQueueManager() throws IbmMqException {
@@ -68,9 +65,10 @@ public class IbmMqNativeClient {
     /**
      * Set ibmMqConnectionManager
      *
-     * @param ibmMqConnectionManager the new value.
+     * @param ibmMqConnectionManager
+     *            the new value.
      */
-    public void setIbmMqConnectionManager(IbmMqConnectionManager ibmMqConnectionManager) {
+    public void setIbmMqConnectionManager(final IbmMqConnectionManager ibmMqConnectionManager) {
         this.ibmMqConnectionManager = ibmMqConnectionManager;
     }
 

@@ -5,7 +5,6 @@
 package za.co.absa.cloud.stream.binder.ibmmq.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.PropertyPlaceholderAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.config.codec.kryo.KryoCodecAutoConfiguration;
@@ -33,9 +32,9 @@ import za.co.absa.ibmmq.admin.commands.InquireTopicCommand;
  * @version 1.0
  */
 @Configuration
-@Import({PropertyPlaceholderAutoConfiguration.class, KryoCodecAutoConfiguration.class })
+@Import({PropertyPlaceholderAutoConfiguration.class, KryoCodecAutoConfiguration.class})
 @EnableConfigurationProperties({IbmMqProperties.class, IbmMqBinderConfigurationProperties.class,
-    IbmMqExtendedBindingProperties.class })
+        IbmMqExtendedBindingProperties.class})
 public class IbmMqMessageChannelBinderConfiguration {
 
     @Autowired

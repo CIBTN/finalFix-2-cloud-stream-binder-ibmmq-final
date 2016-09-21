@@ -13,6 +13,7 @@ import za.co.absa.cloud.stream.binder.ibmmq.DestinationType;
  * @version 1.0
  */
 public class IbmMqBaseChannelProperties {
+
     /**
      * The destination type for this channel.
      */

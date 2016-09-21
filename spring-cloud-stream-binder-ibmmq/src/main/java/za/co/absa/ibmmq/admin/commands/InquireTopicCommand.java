@@ -4,16 +4,14 @@
 
 package za.co.absa.ibmmq.admin.commands;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import za.co.absa.ibmmq.IbmMqException;
-import za.co.absa.ibmmq.admin.IbmMqNativeClient;
 
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQTopic;
 import com.ibm.mq.constants.MQConstants;
+
+import za.co.absa.ibmmq.IbmMqException;
+import za.co.absa.ibmmq.admin.IbmMqNativeClient;
 
 /**
  * A Simple Command That will retrieve an instance of the configure topic if exist or null otherwise.
@@ -22,6 +20,7 @@ import com.ibm.mq.constants.MQConstants;
  * @version 1.0
  */
 public class InquireTopicCommand implements Command<MQTopic, InquireTopicCommand.Params> {
+
     private IbmMqNativeClient ibmMqNativeClient;
 
     /**
@@ -106,9 +105,10 @@ public class InquireTopicCommand implements Command<MQTopic, InquireTopicCommand
     /**
      * Set ibmMqNativeClient
      *
-     * @param ibmMqNativeClient the new value.
+     * @param ibmMqNativeClient
+     *            the new value.
      */
-    public void setIbmMqNativeClient(IbmMqNativeClient ibmMqNativeClient) {
+    public void setIbmMqNativeClient(final IbmMqNativeClient ibmMqNativeClient) {
         this.ibmMqNativeClient = ibmMqNativeClient;
     }
 

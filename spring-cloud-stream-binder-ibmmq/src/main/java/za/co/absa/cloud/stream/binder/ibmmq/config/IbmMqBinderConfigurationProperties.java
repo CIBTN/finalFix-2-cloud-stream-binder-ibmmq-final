@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import za.co.absa.cloud.stream.binder.ibmmq.DestinationType;
 import za.co.absa.ibmmq.admin.HeaderCompressionTechnique;
@@ -17,13 +16,10 @@ import za.co.absa.ibmmq.admin.MessageCompressionTechnique;
 
 @ConfigurationProperties(prefix = "spring.cloud.stream.ibmmq.binder")
 public class IbmMqBinderConfigurationProperties {
+
     private DestinationType defaultDestinationType = DestinationType.QUEUE;
-
-    private List<MessageCompressionTechnique> msgCompList =
-            new ArrayList<>(Collections.singleton(MessageCompressionTechnique.DEFAULT));
-
-    private List<HeaderCompressionTechnique> hdrCompList =
-            new ArrayList<>(Collections.singleton(HeaderCompressionTechnique.DEFAULT));
+    private List<MessageCompressionTechnique> msgCompList = new ArrayList<>(Collections.singleton(MessageCompressionTechnique.DEFAULT));
+    private List<HeaderCompressionTechnique> hdrCompList = new ArrayList<>(Collections.singleton(HeaderCompressionTechnique.DEFAULT));
 
     /**
      * Get msgCompList
