@@ -18,6 +18,7 @@ import za.co.absa.ibmmq.IbmMqException;
  *            the parameters type that will be passed the the execute method
  */
 public interface Command<T, P extends Command.Params> {
+
     /**
      * Executes this commands.
      *

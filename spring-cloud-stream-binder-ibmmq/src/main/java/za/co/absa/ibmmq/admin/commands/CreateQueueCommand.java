@@ -4,16 +4,14 @@
 
 package za.co.absa.ibmmq.admin.commands;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import za.co.absa.ibmmq.IbmMqException;
-import za.co.absa.ibmmq.admin.IbmMqProperties;
 
 import com.ibm.mq.MQQueue;
 import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.pcf.PCFMessage;
+
+import za.co.absa.ibmmq.IbmMqException;
+import za.co.absa.ibmmq.admin.IbmMqProperties;
 
 /**
  * a PCF command that will creates a local IBM MQ Queue and returns an instance of MQQueue for the created queue.
@@ -24,7 +22,6 @@ import com.ibm.mq.pcf.PCFMessage;
 public class CreateQueueCommand extends BasePcfCommand<MQQueue, CreateQueueCommand.Params> {
 
     private IbmMqProperties ibmMqProperties;
-
     private InquireQueueCommand inquireQueueCommand;
 
     /**
@@ -123,18 +120,20 @@ public class CreateQueueCommand extends BasePcfCommand<MQQueue, CreateQueueComma
     /**
      * Set ibmMqProperties
      *
-     * @param ibmMqProperties the new value.
+     * @param ibmMqProperties
+     *            the new value.
      */
-    public void setIbmMqProperties(IbmMqProperties ibmMqProperties) {
+    public void setIbmMqProperties(final IbmMqProperties ibmMqProperties) {
         this.ibmMqProperties = ibmMqProperties;
     }
 
     /**
      * Set inquireQueueCommand
      *
-     * @param inquireQueueCommand the new value.
+     * @param inquireQueueCommand
+     *            the new value.
      */
-    public void setInquireQueueCommand(InquireQueueCommand inquireQueueCommand) {
+    public void setInquireQueueCommand(final InquireQueueCommand inquireQueueCommand) {
         this.inquireQueueCommand = inquireQueueCommand;
     }
 

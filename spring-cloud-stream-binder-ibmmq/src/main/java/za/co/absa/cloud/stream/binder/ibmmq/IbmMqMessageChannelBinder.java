@@ -23,6 +23,8 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
+import com.ibm.mq.MQDestination;
+
 import za.co.absa.cloud.stream.binder.ibmmq.config.IbmMqBaseChannelProperties;
 import za.co.absa.cloud.stream.binder.ibmmq.config.IbmMqBinderConfigurationProperties;
 import za.co.absa.cloud.stream.binder.ibmmq.config.IbmMqConsumerProperties;
@@ -32,8 +34,6 @@ import za.co.absa.ibmmq.IbmMqException;
 import za.co.absa.ibmmq.admin.IbmMqAdmin;
 import za.co.absa.ibmmq.admin.IbmMqConnectionManager;
 
-import com.ibm.mq.MQDestination;
-
 /**
  * A MessageChannel Binder implementation for the IBM MQ messaging system. It extends the helper abstract class
  * AbstractMessageChannelBinder and provides the required methods.
@@ -42,7 +42,7 @@ import com.ibm.mq.MQDestination;
  * @version 1.0
  */
 public class IbmMqMessageChannelBinder extends
-        AbstractMessageChannelBinder<ExtendedConsumerProperties<IbmMqConsumerProperties>, ExtendedProducerProperties<IbmMqProducerProperties>, MQDestination>
+        AbstractMessageChannelBinder<ExtendedConsumerProperties<IbmMqConsumerProperties>, ExtendedProducerProperties<IbmMqProducerProperties>, MQDestination, MQDestination>
         implements ExtendedPropertiesBinder<MessageChannel, IbmMqConsumerProperties, IbmMqProducerProperties> {
 
     /**
@@ -86,8 +86,8 @@ public class IbmMqMessageChannelBinder extends
      *            producer properties
      */
     @Override
-    protected void createProducerDestinationIfNecessary(final String name,
-        final ExtendedProducerProperties<IbmMqProducerProperties> properties) {
+    protected MQDestination createProducerDestinationIfNecessary(final String name, final ExtendedProducerProperties<IbmMqProducerProperties> properties) {
+        MQDestination destination = null;
         try {
             final DestinationType destinationType = getDestinationType(properties.getExtension());
             if (DestinationType.TOPIC.equals(destinationType)) {
@@ -96,22 +96,24 @@ public class IbmMqMessageChannelBinder extends
                         final String topicName = name + '.' + i;
                         if (properties.getRequiredGroups().length > 0) {
                             for (final String group : properties.getRequiredGroups()) {
-                                ibmMqAdmin.getOrCreateDurableQueue(topicName, groupedName(topicName, group));
+                                destination = ibmMqAdmin.getOrCreateDurableQueue(topicName, groupedName(topicName, group));
                             }
                         } else {
-                            ibmMqAdmin.getOrCreateTopic(topicName);
+                            destination = ibmMqAdmin.getOrCreateTopic(topicName);
                         }
                     }
                 } else {
-                    ibmMqAdmin.getOrCreateTopic(name);
+                    destination = ibmMqAdmin.getOrCreateTopic(name);
                 }
             } else {
-                ibmMqAdmin.getOrCreateQueue(name);
+                destination = ibmMqAdmin.getOrCreateQueue(name);
             }
         } catch (IbmMqException e) {
             this.logger.error(String.format("Error creating destination (%s)", name), e);
             throw new RuntimeException(e);
         }
+
+        return destination;
     }
 
     /**
@@ -119,15 +121,14 @@ public class IbmMqMessageChannelBinder extends
      * automatically by the binder.
      *
      * @param destination
-     *            the name of the target destination
+     *            the target destination
      * @param producerProperties
      *            the producer properties
      * @return the {@link JmsOutboundGateway} instance for sending data to the IBM MQ
      * @throws Exception
      */
     @Override
-    protected MessageHandler createProducerMessageHandler(final String destination,
-        final ExtendedProducerProperties<IbmMqProducerProperties> producerProperties) throws Exception {
+    protected MessageHandler createProducerMessageHandler(final MQDestination destination, final ExtendedProducerProperties<IbmMqProducerProperties> producerProperties) throws Exception {
         final DestinationType destinationType = getDestinationType(producerProperties.getExtension());
 
         final boolean useTopic = DestinationType.TOPIC.equals(destinationType);
@@ -139,10 +140,10 @@ public class IbmMqMessageChannelBinder extends
 
         if (producerProperties.isPartitioned()) {
             final String destinationExpression = String.format("'%s'.concat('.').concat(headers['%s'])",
-                    destination.toUpperCase(), BinderHeaders.PARTITION_HEADER);
+                    destination.getName().toUpperCase(), BinderHeaders.PARTITION_HEADER);
             endpoint.setRequestDestinationExpression(EXPRESSION_PARSER.parseExpression(destinationExpression));
         } else {
-            endpoint.setRequestDestinationName(destination.toUpperCase());
+            endpoint.setRequestDestinationName(destination.getName().toUpperCase());
         }
         endpoint.setCorrelationKey("JMSCorrelationID");
         endpoint.afterPropertiesSet();
@@ -161,16 +162,16 @@ public class IbmMqMessageChannelBinder extends
      * @return reference to the consumer destination
      */
     @Override
-    protected MQDestination createConsumerDestinationIfNecessary(final String name, final String group,
-        final ExtendedConsumerProperties<IbmMqConsumerProperties> properties) {
+    protected MQDestination createConsumerDestinationIfNecessary(final String name,
+            final String group,
+            final ExtendedConsumerProperties<IbmMqConsumerProperties> properties) {
 
         final boolean anonymous = !StringUtils.hasText(group);
         try {
             final DestinationType destinationType = getDestinationType(properties.getExtension());
             if (DestinationType.TOPIC.equals(destinationType)) {
                 if (!anonymous) {
-                    final String topicName =
-                            properties.isPartitioned() ? name + '.' + properties.getInstanceIndex() : name;
+                    final String topicName = properties.isPartitioned() ? name + '.' + properties.getInstanceIndex() : name;
                     return ibmMqAdmin.getOrCreateDurableQueue(topicName, groupedName(topicName, group));
                 } else {
                     return ibmMqAdmin.getOrCreateTopic(name);
@@ -202,8 +203,10 @@ public class IbmMqMessageChannelBinder extends
      * @return the consumer endpoint.
      */
     @Override
-    protected MessageProducer createConsumerEndpoint(final String name, final String group,
-        final MQDestination destination, final ExtendedConsumerProperties<IbmMqConsumerProperties> properties) {
+    protected MessageProducer createConsumerEndpoint(final String name,
+            final String group,
+            final MQDestination destination,
+            final ExtendedConsumerProperties<IbmMqConsumerProperties> properties) {
 
         // Create a connection factory
         final IbmMqConsumerProperties consumerProperties = properties.getExtension();
@@ -244,8 +247,10 @@ public class IbmMqMessageChannelBinder extends
      *            the ConsumerProperties of this binding.
      * @return the resolved destination name.
      */
-    private String getDestinationName(final String name, final String group, final DestinationType destinationType,
-        final ConsumerProperties properties) {
+    private String getDestinationName(final String name,
+            final String group,
+            final DestinationType destinationType,
+            final ConsumerProperties properties) {
         if (DestinationType.TOPIC.equals(destinationType)) {
             if (group != null) {
                 final String topicName = properties.isPartitioned() ? name + '.' + properties.getInstanceIndex() : name;
@@ -362,6 +367,11 @@ public class IbmMqMessageChannelBinder extends
         @Override
         public void setOutputChannel(final MessageChannel outputChannel) {
             this.listener.setRequestChannel(outputChannel);
+        }
+
+        @Override
+        public MessageChannel getOutputChannel() {
+            return null;
         }
     }
 }

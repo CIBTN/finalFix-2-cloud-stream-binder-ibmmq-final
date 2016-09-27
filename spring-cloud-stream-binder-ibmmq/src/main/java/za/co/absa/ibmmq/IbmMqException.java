@@ -11,6 +11,7 @@ package za.co.absa.ibmmq;
  * @version 1.0
  */
 public class IbmMqException extends Exception {
+
     /**
      * Constructs instance from message.
      *

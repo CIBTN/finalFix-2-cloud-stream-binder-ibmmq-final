@@ -4,7 +4,7 @@
 
 package za.co.absa.cloud.stream.binder.ibmmq;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;

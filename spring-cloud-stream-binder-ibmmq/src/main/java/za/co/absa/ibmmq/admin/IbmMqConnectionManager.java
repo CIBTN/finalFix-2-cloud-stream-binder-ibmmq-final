@@ -10,15 +10,15 @@ import javax.annotation.PostConstruct;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 
-import za.co.absa.cloud.stream.binder.ibmmq.config.IbmMqBinderConfigurationProperties;
-import za.co.absa.ibmmq.IbmMqException;
-
 import com.ibm.mq.MQEnvironment;
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQQueueManager;
 import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.jms.MQConnectionFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
+
+import za.co.absa.cloud.stream.binder.ibmmq.config.IbmMqBinderConfigurationProperties;
+import za.co.absa.ibmmq.IbmMqException;
 
 /**
  * Manages the connections to IBM MQ, it will handle both JMS connection and Native (Queue Manager) connections.
@@ -27,8 +27,8 @@ import com.ibm.msg.client.wmq.WMQConstants;
  * @version 1.0
  */
 public class IbmMqConnectionManager {
-    private IbmMqProperties ibmMqProperties;
 
+    private IbmMqProperties ibmMqProperties;
     private IbmMqBinderConfigurationProperties ibmMqBinderProperties;
 
     private volatile MQConnectionFactory jmsConnectionFactory;
@@ -129,7 +129,6 @@ public class IbmMqConnectionManager {
         }
     }
 
-
     /**
      * Get ibmMqProperties
      *
@@ -142,7 +141,8 @@ public class IbmMqConnectionManager {
     /**
      * Set ibmMqProperties
      *
-     * @param ibmMqProperties the new value.
+     * @param ibmMqProperties
+     *            the new value.
      */
     public void setIbmMqProperties(final IbmMqProperties ibmMqProperties) {
         this.ibmMqProperties = ibmMqProperties;
@@ -160,7 +160,8 @@ public class IbmMqConnectionManager {
     /**
      * Set ibmMqBinderProperties
      *
-     * @param ibmMqBinderProperties the new value.
+     * @param ibmMqBinderProperties
+     *            the new value.
      */
     public void setIbmMqBinderProperties(final IbmMqBinderConfigurationProperties ibmMqBinderProperties) {
         this.ibmMqBinderProperties = ibmMqBinderProperties;

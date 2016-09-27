@@ -8,12 +8,12 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import za.co.absa.ibmmq.IbmMqException;
-import za.co.absa.ibmmq.admin.IbmMqNativeClient;
-
 import com.ibm.mq.MQException;
 import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.pcf.PCFMessage;
+
+import za.co.absa.ibmmq.IbmMqException;
+import za.co.absa.ibmmq.admin.IbmMqNativeClient;
 
 /**
  * Base class for all PCF Commands.
@@ -22,6 +22,7 @@ import com.ibm.mq.pcf.PCFMessage;
  * @version 1.0
  */
 public abstract class BasePcfCommand<T, P extends BasePcfCommand.Params> implements Command<T, P> {
+
     @Autowired
     private IbmMqNativeClient ibmMqNativeClient;
 

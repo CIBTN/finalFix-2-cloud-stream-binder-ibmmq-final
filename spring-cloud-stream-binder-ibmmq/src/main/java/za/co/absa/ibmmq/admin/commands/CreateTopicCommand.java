@@ -4,15 +4,13 @@
 
 package za.co.absa.ibmmq.admin.commands;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import za.co.absa.ibmmq.IbmMqException;
 
 import com.ibm.mq.MQTopic;
 import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.pcf.PCFMessage;
+
+import za.co.absa.ibmmq.IbmMqException;
 
 /**
  * a PCF Command to create a IBM MQ Topic and returns an instance of MQTopic for the created topic.
@@ -113,9 +111,10 @@ public class CreateTopicCommand extends BasePcfCommand<MQTopic, CreateTopicComma
     /**
      * Set inquireTopicCommand
      *
-     * @param inquireTopicCommand the new value.
+     * @param inquireTopicCommand
+     *            the new value.
      */
-    public void setInquireTopicCommand(InquireTopicCommand inquireTopicCommand) {
+    public void setInquireTopicCommand(final InquireTopicCommand inquireTopicCommand) {
         this.inquireTopicCommand = inquireTopicCommand;
     }
 

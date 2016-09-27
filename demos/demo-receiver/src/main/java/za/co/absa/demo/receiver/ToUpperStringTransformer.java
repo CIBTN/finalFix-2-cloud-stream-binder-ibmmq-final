@@ -4,7 +4,8 @@
 
 package za.co.absa.demo.receiver;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -16,20 +17,17 @@ import org.springframework.messaging.handler.annotation.SendTo;
 @EnableBinding(Processor.class)
 public class ToUpperStringTransformer {
 
-    public static void main(final String[] args) {
-        SpringApplication.run(ToUpperStringTransformer.class, args);
-    }
-
-    /**
-     * The log4j logger.
-     */
-    private static final Logger LOG = Logger.getLogger(ToUpperStringTransformer.class);
+    private static final Logger log = LoggerFactory.getLogger(ToUpperStringTransformer.class);
 
     @StreamListener(Processor.INPUT)
     @SendTo(Processor.OUTPUT)
     public String toUpperString(final String str) {
         final String processed = str.toUpperCase();
-        LOG.info("Upper: " + processed);
+        log.info("Upper: " + processed);
         return processed;
+    }
+
+    public static void main(final String[] args) {
+        SpringApplication.run(ToUpperStringTransformer.class, args);
     }
 }
