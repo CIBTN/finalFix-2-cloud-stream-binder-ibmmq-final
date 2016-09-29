@@ -5,32 +5,33 @@
 # IBM MQ Setup
 1. Login to the docker host, if running windows or Mac, the command will be something like
 
-    ```docker-machine ssh default```
+    `docker-machine ssh default`
 2. Update maximum open files settings
 
-    ```sudo sysctl -w fs.file-max=2000000```
+    `sudo sysctl -w fs.file-max=2000000`
 3. Navigate to ```docker``` folder of the submission and build the custom docker image
 
-    ```docker build -t mq-for-binder .```
+    `docker build -t mq-for-binder .`
 4. Run the following to start server
 
-    ```docker --debug  run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --volume /mnt/sda1/mq-binder:/var/mqm --name ibmmq-for-binder --publish 1414:1414  --detach mq-for-binder```
+    `docker --debug  run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --volume /mnt/sda1/mq-binder:/var/mqm --name ibmmq-for-binder --publish 1414:1414  --detach mq-for-binder`
 
 
 # Build the binders and demos
+
 ## Prerequisites
+
 1. Java 8
 2. Maven 3.3.9
 
 ## Build
-1. Install native MQ library, from ```/lib``` directory run
+1. Install native MQ library, from `/lib` directory run
 
-    ```mvn install:install-file -Dfile=com.ibm.mq.allclient.jar -DpomFile=com.ibm.mq.allclient.pom.xml```
+    `mvn install:install-file -Dfile=com.ibm.mq.allclient.jar -DpomFile=com.ibm.mq.allclient.pom.xml`
 
 2. From the root submission directory, run
 
-    ```mvn clean install -P spring```
-
+    `mvn clean install -P spring`
 
 # Verification
 
@@ -40,44 +41,46 @@ To run a demo with the supplied command you will need to navigate to the relevan
 
 ## Common Configuration
 
-update the ```src/main/resources/application.properties``` files in demo-sender and demo-receiver apps with the correct
+Update the `src/main/resources/application.properties` files in demo-sender and demo-receiver apps with the correct
 values for your environment, specifically, you will need to set the following properties (the values below are the default)
 
-   
-    spring.ibmmq.host=127.0.0.1
-    spring.ibmmq.port=1414
-    spring.ibmmq.qm=QM1
-    spring.ibmmq.username=?
-    spring.ibmmq.password=?
-    spring.ibmmq.channel=SYSTEM.DEF.SVRCONN
-    
+```   
+spring.ibmmq.host=127.0.0.1
+spring.ibmmq.port=1414
+spring.ibmmq.qm=QM1
+spring.ibmmq.username=?
+spring.ibmmq.password=?
+spring.ibmmq.channel=SYSTEM.DEF.SVRCONN
+```    
 
 ## Sender/Receiver With Queue Destination and No Consumer Grouping
-1. Update the ```src/main/resources/application.properties``` file of the demo-sender and make sure it contains the following setting
+
+1. Update the `src/main/resources/application.properties` file of the demo-sender and make sure it contains the following setting
     
-    ```spring.cloud.stream.ibmmq.binder.default-destination-type=queue```
+    `spring.cloud.stream.ibmmq.binder.default-destination-type=queue`
+    
 2. Run Sender
     
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8881"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8881"`
     
     ![Sender With Queue](screenshots/sender-queue1.jpg)
     
     Please note the generated strings with the index suffex that will be used to track the messages when running receivers.
     
-3. Update the ```src/main/resources/application.properties``` file of the demo-receiver and make sure it contains the following setting
+3. Update the `src/main/resources/application.properties` file of the demo-receiver and make sure it contains the following setting
        
-    ```spring.cloud.stream.ibmmq.binder.default-destination-type=queue```
+    `spring.cloud.stream.ibmmq.binder.default-destination-type=queue`
     
 4. Run Receiver
 
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8882"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8882"`
         
     ![Receiver With Queue](screenshots/receiver-queue1.jpg)
     
 5. Run Multiple Receivers
     Just make sure to change the server.port for each receiver
     
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8883"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8883"`
     
     First receiver log
     
@@ -91,11 +94,12 @@ values for your environment, specifically, you will need to set the following pr
 
 
 ## Sender/Receiver With Queue Destination and with Consumer Grouping
+
 1. Keep the sender running 
 2. Terminate the receivers
 3. Re-run the first receiver with the following command 
     
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8882,--spring.cloud.stream.bindings.input.group=group1"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8882,--spring.cloud.stream.bindings.input.group=group1"`
     
     ![Queue Receiver With Grouping](screenshots/receiver-queue-with-group.jpg)
     
@@ -103,26 +107,27 @@ values for your environment, specifically, you will need to set the following pr
     is logged in this case.
     
 ## Sender/Receiver With Topic Destination and No Consumer Grouping
+
 1. Terminate the sender and receivers
-2. Update the ```src/main/resources/application.properties``` file of the demo-sender and demo-receiver and make 
+2. Update the `src/main/resources/application.properties` file of the demo-sender and demo-receiver and make 
 sure it contains the following setting
        
-       ```spring.cloud.stream.ibmmq.binder.default-destination-type=topic```
+       `spring.cloud.stream.ibmmq.binder.default-destination-type=topic`
        
 3. Run sender
       
-      ```mvn spring-boot:run -Drun.arguments="--server.port=8881"```
+      `mvn spring-boot:run -Drun.arguments="--server.port=8881"`
       
       ![Sender with Topic](screenshots/sender-topic1.jpg)
       
 4. Run Multiple Receivers
       
-      ```mvn spring-boot:run -Drun.arguments="--server.port=8882"```
+      `mvn spring-boot:run -Drun.arguments="--server.port=8882"`
       
       ![Sender with Topic](screenshots/receiver-topic1.jpg)
       
       
-      ```mvn spring-boot:run -Drun.arguments="--server.port=8883"```
+      `mvn spring-boot:run -Drun.arguments="--server.port=8883"`
       
       ![Sender with Topic](screenshots/receiver-topic2.jpg)
       
@@ -130,23 +135,25 @@ sure it contains the following setting
       Note that each receiver will receive a copy of the messages (i.e a pub/sub model)
 
 ## Sender/Receiver With Topic Destination and with Consumer Grouping
+
 1. Keep sender running
 2. Terminate all receivers
 3. Run multiple receivers with different groups
 
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8882,--spring.cloud.stream.bindings.input.group=group1"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8882,--spring.cloud.stream.bindings.input.group=group1"`
     
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8883,--spring.cloud.stream.bindings.input.group=group1"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8883,--spring.cloud.stream.bindings.input.group=group1"`
     
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8884,--spring.cloud.stream.bindings.input.group=group2"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8884,--spring.cloud.stream.bindings.input.group=group2"`
     
-    ```mvn spring-boot:run -Drun.arguments="--server.port=8885,--spring.cloud.stream.bindings.input.group=group2"```
+    `mvn spring-boot:run -Drun.arguments="--server.port=8885,--spring.cloud.stream.bindings.input.group=group2"`
     
     Please note that receivers in the same group will compete for messages while each group will receive a complete 
     copy of messages
     
 ## Sender/Receiver With Topic Destination, Consumer Grouping and Partitioning
 ### Scenario
+
 In this scenario we will configure a partitioned pub/sub based on the suffix index in the generated random string
 
 1. We will have 5 partitions, each one is responsible to handle the modulo 5 of the suffix index 
@@ -158,6 +165,7 @@ In this scenario we will configure a partitioned pub/sub based on the suffix ind
 2. We will have multiple receivers that will subscribe to one of the partitions and so will ONLY receive messages related to this partition.
 
 ### Steps
+
 1. Terminate the sender and receivers.
 2. Update application.properties of the sender to enable partitioning
 
@@ -168,7 +176,7 @@ In this scenario we will configure a partitioned pub/sub based on the suffix ind
     spring.cloud.stream.bindings.output.producer.required-groups[0]=group1
     spring.cloud.stream.bindings.output.producer.required-groups[1]=group2
     ```
-    
+
     The required-groups property will trigger the creation of required durable subscriptions before any message is sent.
     
 3. Run the sender
@@ -184,13 +192,13 @@ In this scenario we will configure a partitioned pub/sub based on the suffix ind
     ```
 5. Run multiple receivers
 
-    1. ```mvn spring-boot:run -Drun.arguments="--server.port=8882,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=0"```
-    2. ```mvn spring-boot:run -Drun.arguments="--server.port=8883,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=0"```
-    3. ```mvn spring-boot:run -Drun.arguments="--server.port=8884,--spring.cloud.stream.bindings.input.group=group2,--spring.cloud.stream.instance-index=0"```
-    4. ```mvn spring-boot:run -Drun.arguments="--server.port=8885,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=1"```
-    5. ```mvn spring-boot:run -Drun.arguments="--server.port=8886,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=2"```
-    6. ```mvn spring-boot:run -Drun.arguments="--server.port=8887,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=3"```
-    7. ```mvn spring-boot:run -Drun.arguments="--server.port=8888,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=4"```
+    1. `mvn spring-boot:run -Drun.arguments="--server.port=8882,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=0"`
+    2. `mvn spring-boot:run -Drun.arguments="--server.port=8883,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=0"`
+    3. `mvn spring-boot:run -Drun.arguments="--server.port=8884,--spring.cloud.stream.bindings.input.group=group2,--spring.cloud.stream.instance-index=0"`
+    4. `mvn spring-boot:run -Drun.arguments="--server.port=8885,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=1"`
+    5. `mvn spring-boot:run -Drun.arguments="--server.port=8886,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=2"`
+    6. `mvn spring-boot:run -Drun.arguments="--server.port=8887,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=3"`
+    7. `mvn spring-boot:run -Drun.arguments="--server.port=8888,--spring.cloud.stream.bindings.input.group=group1,--spring.cloud.stream.instance-index=4"`
     
     In this topology we have
     
